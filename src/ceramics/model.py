@@ -9,10 +9,9 @@ class Student:
     name: str
 
 
-@dataclass(unsafe_hash=True)
+@dataclass(unsafe_hash=True, order=True)
 class Lesson:
     date: str
-    attendance: dict[Student, bool] = field(hash=False, default_factory=dict)
 
 
 @dataclass(unsafe_hash=True)
@@ -31,6 +30,10 @@ class Course:
     def add_lessons(self):
         for date in weekly_date_range(self.start_date, self.end_date, self.weekday):
             self.lessons.add(Lesson(date))
+
+    @property
+    def lessons_sorted(self):
+        return sorted(self.lessons)
 
     def enroll(self, student: Student):
         self.enrollments.add(student)

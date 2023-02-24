@@ -2,7 +2,23 @@
 {% block title %}{{ course.name }}{% endblock %}
 {% block content %}
   <h1>{{ course.name }}</h1>
-  Enrolled students:
+  <h2>Lessons:</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for lesson in course.lessons_sorted %}
+      <tr>
+        <td>{{ lesson.date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Enrolled students:</h2>
   <table>
     <thead>
       <tr>
