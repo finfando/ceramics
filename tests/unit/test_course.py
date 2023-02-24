@@ -1,5 +1,6 @@
-from ceramics.model import Course, Student
 from datetime import date
+
+from ceramics.model import Course, Student
 
 fake_course_params = ("Fake course name", date(2023, 2, 27), date(2023, 6, 30), 3, 50)
 

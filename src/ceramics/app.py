@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Flask, redirect, render_template, request
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -41,7 +43,15 @@ def new_course():
     elif request.method == "POST":
         session = get_session()
         repo = repository.SQLAlchemyRepository(session, model.Course)
-        repo.add(model.Course(**request.form))
+        repo.add(
+            model.Course(
+                name=request.form["name"],
+                start_date=datetime.strptime(request.form["start_date"], "%Y-%m-%d"),
+                end_date=datetime.strptime(request.form["end_date"], "%Y-%m-%d"),
+                weekday=int(request.form["weekday"]),
+                price_per_lesson=int(request.form["price_per_lesson"]),
+            )
+        )
         session.commit()
         return redirect("/courses")
 

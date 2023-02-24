@@ -12,6 +12,14 @@ student = Table(
     Column("name", String(255), nullable=False),
 )
 
+lesson = Table(
+    "lessons",
+    mapper_registry.metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("date", Date(), nullable=False),
+    Column("course_id", Integer, ForeignKey("courses.id")),
+)
+
 course = Table(
     "courses",
     mapper_registry.metadata,
@@ -33,12 +41,14 @@ enrollment = Table(
 
 def start_mappers():
     student_mapper = mapper_registry.map_imperatively(model.Student, student)
+    lessson_mapper = mapper_registry.map_imperatively(model.Lesson, lesson)
     mapper_registry.map_imperatively(
         model.Course,
         course,
         properties={
+            "lessons": relationship(lessson_mapper, collection_class=set),
             "enrollments": relationship(
                 student_mapper, secondary=enrollment, collection_class=set
-            )
+            ),
         },
     )
