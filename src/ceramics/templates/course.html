@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ course.name }}{% endblock %}
+{% block content %}
+  <h1>{{ course.name }}</h1>
+  Enrolled students:
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in course.enrollments %}
+      <tr>
+        <td>{{ student.id }}</td>
+        <td>{{ student.name }}</td>
+        <td><a href="/courses/{{ course.id }}/disenroll/{{ student.id }}">disenroll</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="/courses/{{ course.id }}/enroll">Enroll</a>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Enroll{% endblock %}
+{% block content %}
+  <h1>Enroll to {{ course.name }}</h1>
+  <form method="post">
+    <label for="students">Choose a student:</label>
+    <select name="students" id="students">
+      {% for student in students %}
+      <option value="{{ student.id }}">{{ student.name}}</option>
+      {% endfor %}
+    </select>
+    <input type="submit" value="Enroll">
+  </form>
+{% endblock %}

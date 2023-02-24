@@ -1,0 +1,7 @@
+flask
+sqlite-utils
+pydantic
+pytest
+SQLAlchemy
+psycopg2-binary
+requests

@@ -1,0 +1,100 @@
+from flask import Flask, redirect, render_template, request
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from ceramics import config, model, orm, repository
+
+orm.start_mappers()
+get_session = sessionmaker(bind=create_engine(config.get_postgres_uri()))
+config.create_schema()
+app = Flask(__name__)
+
+
+@app.route("/", methods=["GET"])
+def index():
+    return render_template("index.html")
+
+
+@app.route("/students/new", methods=["GET", "POST"])
+def new_student():
+    if request.method == "GET":
+        return render_template("new_student.html")
+    elif request.method == "POST":
+        session = get_session()
+        repo = repository.SQLAlchemyRepository(session, model.Student)
+        repo.add(model.Student(name=request.form["name"]))
+        session.commit()
+        return redirect("/students")
+
+
+@app.route("/students", methods=["GET"])
+def students():
+    session = get_session()
+    repo = repository.SQLAlchemyRepository(session, model.Student)
+    students = repo.list()
+    return render_template("students.html", students=students)
+
+
+@app.route("/courses/new", methods=["GET", "POST"])
+def new_course():
+    if request.method == "GET":
+        return render_template("new_course.html")
+    elif request.method == "POST":
+        session = get_session()
+        repo = repository.SQLAlchemyRepository(session, model.Course)
+        repo.add(model.Course(name=request.form["name"]))
+        session.commit()
+        return redirect("/courses")
+
+
+@app.route("/courses", methods=["GET"])
+def courses():
+    session = get_session()
+    repo = repository.SQLAlchemyRepository(session, model.Course)
+    courses = repo.list()
+    return render_template("courses.html", courses=courses)
+
+
+@app.route("/courses/<int:id>", methods=["GET"])
+def course(id):
+    session = get_session()
+    repo = repository.SQLAlchemyRepository(session, model.Course)
+    course = repo.get(id)
+    return render_template("course.html", course=course)
+
+
+@app.route("/courses/<int:id>/enroll", methods=["GET", "POST"])
+def course_enroll(id):
+    if request.method == "GET":
+        session = get_session()
+        repo_course = repository.SQLAlchemyRepository(session, model.Course)
+        course = repo_course.get(id)
+        repo_student = repository.SQLAlchemyRepository(session, model.Student)
+        students = repo_student.list()
+        return render_template("enroll.html", course=course, students=students)
+    elif request.method == "POST":
+        session = get_session()
+        repo_course = repository.SQLAlchemyRepository(session, model.Course)
+        course = repo_course.get(id)
+        repo_student = repository.SQLAlchemyRepository(session, model.Student)
+        student = repo_student.get(request.form["students"])
+        course.enroll(student)
+        session.commit()
+        return redirect(f"/courses/{id}")
+
+
+@app.route("/courses/<int:course_id>/disenroll/<int:student_id>", methods=["GET"])
+def course_disenroll(course_id, student_id):
+    if request.method == "GET":
+        session = get_session()
+        repo_course = repository.SQLAlchemyRepository(session, model.Course)
+        course = repo_course.get(course_id)
+        repo_student = repository.SQLAlchemyRepository(session, model.Student)
+        student = repo_student.get(student_id)
+        course.disenroll(student)
+        session.commit()
+        return redirect(f"/courses/{course_id}")
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

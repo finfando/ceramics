@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <title>{% block title %}{% endblock %} - Ceramics</title>
+    {% endblock %}
+    <style type="text/css">
+        #footer { font-size: xx-small; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/students">Students</a>
+        <a href="/courses">Courses</a>
+    </nav>
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="footer">
+        {% block footer %}
+        &copy; Copyright 2023 by Filip Finfando
+        {% endblock %}
+    </div>
+</body>
+</html>

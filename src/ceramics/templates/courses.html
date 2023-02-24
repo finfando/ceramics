@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Courses{% endblock %}
+{% block content %}
+  <h1>Courses</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for course in courses %}
+      <tr>
+        <td>{{ course.id }}</td>
+        <td>{{ course.name }}</td>
+        <td><a href="/courses/{{ course.id }}">show</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="/courses/new">New</a>
+{% endblock %}
