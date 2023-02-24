@@ -12,6 +12,14 @@ class Student:
 @dataclass(unsafe_hash=True, order=True)
 class Lesson:
     date: str
+    attendance: set["Attendance"] = field(hash=False, default_factory=set)
+
+
+@dataclass(unsafe_hash=True)
+class Attendance:
+    student: Student
+    lesson: Lesson
+    present: bool
 
 
 @dataclass(unsafe_hash=True)

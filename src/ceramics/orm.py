@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Date, ForeignKey, Integer, String, Table
+from sqlalchemy import Boolean, Column, Date, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import registry, relationship
 
 from ceramics import model
@@ -38,10 +38,25 @@ enrollment = Table(
     Column("course_id", Integer, ForeignKey("courses.id"), primary_key=True),
 )
 
+attendance = Table(
+    "attendance",
+    mapper_registry.metadata,
+    Column("student_id", Integer, ForeignKey("students.id"), primary_key=True),
+    Column("lesson_id", Integer, ForeignKey("lessons.id"), primary_key=True),
+    Column("present", Boolean),
+)
+
 
 def start_mappers():
     student_mapper = mapper_registry.map_imperatively(model.Student, student)
-    lessson_mapper = mapper_registry.map_imperatively(model.Lesson, lesson)
+    attendance_mapper = mapper_registry.map_imperatively(model.Attendance, attendance)
+    lessson_mapper = mapper_registry.map_imperatively(
+        model.Lesson,
+        lesson,
+        properties={
+            "attendance": relationship(attendance_mapper, collection_class=set),
+        },
+    )
     mapper_registry.map_imperatively(
         model.Course,
         course,
