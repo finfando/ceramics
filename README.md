@@ -28,7 +28,7 @@ pip install -e src/
 
 ```
 docker run -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres
-python -c "from ceramics.config import create_schema; create_schema()"
+python -c "from ceramics.config import recreate_schema; recreate_schema()"
 ```
 
 ```
