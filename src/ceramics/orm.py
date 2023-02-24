@@ -17,6 +17,10 @@ course = Table(
     mapper_registry.metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("name", String(255), nullable=False),
+    Column("start_date", Date(), nullable=False),
+    Column("end_date", Date(), nullable=False),
+    Column("weekday", Integer(), nullable=False),
+    Column("price_per_lesson", Integer(), nullable=False),
 )
 
 enrollment = Table(

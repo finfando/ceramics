@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from datetime import date
 
 
 @dataclass(unsafe_hash=True)
@@ -8,7 +9,11 @@ class Student:
 
 @dataclass(unsafe_hash=True)
 class Course:
-    name: str = field(hash=True, compare=True)
+    name: str
+    start_date: date
+    end_date: date
+    weekday: int
+    price_per_lesson: int
     enrollments: set[Student] = field(hash=False, default_factory=set)
 
     def enroll(self, student: Student):

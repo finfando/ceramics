@@ -9,7 +9,7 @@ def insert_student(session):
 
 
 def insert_course(session):
-    session.execute(text("insert into courses (id, name) values (1, 'Ceramics')"))
+    session.execute(text("insert into courses (id, name, start_date, end_date, weekday, price_per_lesson) values (1, 'Ceramics', '2023-02-27', '2023-06-30', 3, 50)"))
 
 
 def insert_enrollment(session, student_id, course_id):

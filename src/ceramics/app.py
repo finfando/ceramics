@@ -41,7 +41,7 @@ def new_course():
     elif request.method == "POST":
         session = get_session()
         repo = repository.SQLAlchemyRepository(session, model.Course)
-        repo.add(model.Course(name=request.form["name"]))
+        repo.add(model.Course(**request.form))
         session.commit()
         return redirect("/courses")
 
@@ -69,7 +69,7 @@ def course_enroll(id):
         repo_course = repository.SQLAlchemyRepository(session, model.Course)
         course = repo_course.get(id)
         repo_student = repository.SQLAlchemyRepository(session, model.Student)
-        students = repo_student.list()
+        students = set(repo_student.list()) - course.enrollments
         return render_template("enroll.html", course=course, students=students)
     elif request.method == "POST":
         session = get_session()
