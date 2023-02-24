@@ -11,5 +11,6 @@ test-e2e:
 watch-tests:
 	ls *.py | entr pytest --tb=short
 
-black:
+format:
+	isort --profile black .
 	black -l 86 $$(find * -name '*.py')
