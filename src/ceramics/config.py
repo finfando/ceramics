@@ -20,6 +20,7 @@ def get_api_url():
     return f"http://{host}:{port}"
 
 
-def create_schema():
+def recreate_schema():
     engine = create_engine(get_postgres_uri())
+    mapper_registry.metadata.drop_all(engine)
     mapper_registry.metadata.create_all(engine)

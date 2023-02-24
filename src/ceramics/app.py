@@ -6,7 +6,6 @@ from ceramics import config, model, orm, repository
 
 orm.start_mappers()
 get_session = sessionmaker(bind=create_engine(config.get_postgres_uri()))
-config.create_schema()
 app = Flask(__name__)
 
 
