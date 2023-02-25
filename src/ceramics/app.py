@@ -111,12 +111,43 @@ def attendance(id, date):
         session = get_session()
         repo = repository.SQLAlchemyRepository(session, model.Course)
         course = repo.get(id)
-
-        date = datetime.strptime(date, "%Y-%m-%d").date() # TODO: use custom flask converter
+        date = datetime.strptime(
+            date, "%Y-%m-%d"
+        ).date()  # TODO: use custom flask converter
         lesson = course.get_lesson_by_date(date)
-        # remaining_enrolled_students = course.enrollments - {a.student for a in lesson.attendance}
-        attendance = [model.Attendance(s, course, None) for s in course.enrollments]
-        return render_template("lesson.html", course=course, lesson=lesson, attendance=attendance)
+        if len(lesson.attendance) == 0:
+            attendance_from_course = [
+                model.Attendance(student) for student in course.enrollments
+            ]
+            lesson.attendance.update(attendance_from_course)
+        return render_template(
+            "lesson.html", course=course, lesson=lesson, attendance=lesson.attendance
+        )
+    if request.method == "POST":
+        session = get_session()
+        repo_course = repository.SQLAlchemyRepository(session, model.Course)
+        repo_student = repository.SQLAlchemyRepository(session, model.Student)
+        course = repo_course.get(id)
+        date = datetime.strptime(
+            date, "%Y-%m-%d"
+        ).date()  # TODO: use custom flask converter
+        lesson = course.get_lesson_by_date(date)
+        for student_id, attendance_status in request.form.items():
+            student = repo_student.get(int(student_id))
+            if attendance_status == "present":
+                lesson.update_attendance_status(
+                    student, model.AttendanceStatus.PRESENT
+                )
+            elif attendance_status == "absent":
+                lesson.update_attendance_status(
+                    student, model.AttendanceStatus.ABSENT
+                )
+            elif attendance_status == "unknown":
+                lesson.update_attendance_status(
+                    student, model.AttendanceStatus.UNKNOWN
+                )
+            session.commit()
+        return redirect(f"/courses/{id}/attendance/{date}")
 
 
 if __name__ == "__main__":

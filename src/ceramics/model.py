@@ -1,7 +1,15 @@
 from dataclasses import dataclass, field
 from datetime import date
+from enum import Enum, auto
+from typing import Optional
 
 from ceramics.utils import weekly_date_range
+
+
+class AttendanceStatus(Enum):
+    PRESENT = auto()
+    ABSENT = auto()
+    UNKNOWN = auto()
 
 
 @dataclass(unsafe_hash=True)
@@ -14,12 +22,27 @@ class Lesson:
     date: str
     attendance: set["Attendance"] = field(hash=False, default_factory=set)
 
+    @property
+    def students(self):
+        return [a.student for a in self.attendance]
+
+    def student_attendance(self, student):
+        return next(a for a in self.attendance if a.student == student)
+
+    def update_attendance_status(self, student: Student, status: AttendanceStatus):
+        if student in self.students:
+            attendance = self.student_attendance(student)
+            attendance.status = status
+        else:
+            self.attendance.add(Attendance(student, status))
+
 
 @dataclass(unsafe_hash=True)
 class Attendance:
-    student: Student
-    lesson: Lesson
-    present: bool
+    student: Student = field(hash=True, compare=True)
+    status: AttendanceStatus = field(
+        hash=False, default_factory=lambda: AttendanceStatus.UNKNOWN
+    )
 
 
 @dataclass(unsafe_hash=True)

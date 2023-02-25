@@ -16,11 +16,11 @@
         <tr>
           <td>{{ a.student.name }}</td>
           <td>
-            <input type="radio" id="{{ a.student.id }}-present" name="{{ a.student.id }}" value="present">
+            <input type="radio" id="{{ a.student.id }}-present" name="{{ a.student.id }}" value="present"{{ "checked" if a.status.name == "PRESENT" }}>
             <label for="{{ a.student.id }}-present">Present</label>
-            <input type="radio" id="{{ a.student.id }}-absent" name="{{ a.student.id }}" value="absent">
+            <input type="radio" id="{{ a.student.id }}-absent" name="{{ a.student.id }}" value="absent"{{ "checked" if a.status.name == "ABSENT" }}>
             <label for="{{ a.student.id }}-absent">Absent</label>
-            <input type="radio" id="{{ a.student.id }}-unknown" name="{{ a.student.id }}" value="unknown">
+            <input type="radio" id="{{ a.student.id }}-unknown" name="{{ a.student.id }}" value="unknown"{{ "checked" if a.status.name == "UNKNOWN" }}>
             <label for="{{ a.student.id }}-unknown">Unknown</label>
           </td>
         </tr>
