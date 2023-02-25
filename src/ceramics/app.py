@@ -105,5 +105,19 @@ def course_disenroll(course_id, student_id):
         return redirect(f"/courses/{course_id}")
 
 
+@app.route("/courses/<int:id>/attendance/<date>", methods=["GET", "POST"])
+def attendance(id, date):
+    if request.method == "GET":
+        session = get_session()
+        repo = repository.SQLAlchemyRepository(session, model.Course)
+        course = repo.get(id)
+
+        date = datetime.strptime(date, "%Y-%m-%d").date() # TODO: use custom flask converter
+        lesson = course.get_lesson_by_date(date)
+        # remaining_enrolled_students = course.enrollments - {a.student for a in lesson.attendance}
+        attendance = [model.Attendance(s, course, None) for s in course.enrollments]
+        return render_template("lesson.html", course=course, lesson=lesson, attendance=attendance)
+
+
 if __name__ == "__main__":
     app.run(debug=True)

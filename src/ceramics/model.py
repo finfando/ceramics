@@ -43,6 +43,9 @@ class Course:
     def lessons_sorted(self):
         return sorted(self.lessons)
 
+    def get_lesson_by_date(self, date: date):
+        return next(l for l in self.lessons if l.date == date)
+
     def enroll(self, student: Student):
         self.enrollments.add(student)
 

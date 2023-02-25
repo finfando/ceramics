@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ lesson.date }} - {{ course.name }}{% endblock %}
+{% block content %}
+  <h1>{{ lesson.date }}</h1>
+  <h2>Attendance list:</h2>
+  <form method="post">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Attendance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in attendance %}
+        <tr>
+          <td>{{ a.student.name }}</td>
+          <td>
+            <input type="radio" id="{{ a.student.id }}-present" name="{{ a.student.id }}" value="present">
+            <label for="{{ a.student.id }}-present">Present</label>
+            <input type="radio" id="{{ a.student.id }}-absent" name="{{ a.student.id }}" value="absent">
+            <label for="{{ a.student.id }}-absent">Absent</label>
+            <input type="radio" id="{{ a.student.id }}-unknown" name="{{ a.student.id }}" value="unknown">
+            <label for="{{ a.student.id }}-unknown">Unknown</label>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <input type="submit" value="Submit">
+  </form>
+
+
+{% endblock %}

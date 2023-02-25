@@ -12,7 +12,7 @@
     <tbody>
       {% for lesson in course.lessons_sorted %}
       <tr>
-        <td>{{ lesson.date }}</td>
+        <td><a href="/courses/{{ course.id }}/attendance/{{ lesson.date }}">{{ lesson.date }}</a></td>
       </tr>
       {% endfor %}
     </tbody>
